@@ -13,6 +13,7 @@ const CardList = ({
                 id = { jobs[i].id }
                 name = { jobs[i].name }
                 keywords = { jobs[i].keywords}
+                stared = { jobs[i].stared}
                 onStarClick = {onStarClick}
           />
         );

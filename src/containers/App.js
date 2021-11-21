@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Cookies from 'universal-cookie';
 import CardList from '../components/CardList';
 import SearchBox from '../components/SearchBox';
 import Scroll from '../components/Scroll';
@@ -8,13 +9,24 @@ class App extends Component {
     super();
     this.state = {
       jobs: [],
-      favorites: [1],
+      favorites: [],
       searchfield: ''
     }
   }
 
   componentDidMount() {
     this.setState({jobs: jobs});
+    const cookies = new Cookies();
+    try {
+      const stars = cookies.get('myStars');
+      if(stars){
+        this.setState({favorites: stars});
+      }
+    }
+    catch(err) {
+      console.log(err);
+      this.setState({favorites: []});
+    }
   }
 
   onSearchChange = (event) => {
@@ -24,22 +36,25 @@ class App extends Component {
   }
 
   onStarClicked = (id) => {
-    var favs = [];
+    let favs = [];
 
-    if(this.state.favorites.indexOf(id) >= 0) {
-      this.favs = this.state.favorites.filter(x => x !== id);
+    if(this.state.favorites && this.state.favorites.indexOf(id) >= 0) {
+      favs = this.state.favorites.filter(x => x !== id);
+    } else if(this.state.favorites){
+      favs = this.state.favorites;
+      favs = favs.concat(id); 
     } else {
-      this.favs = this.state.favorites;
-      this.favs.concat(id); 
+      favs = favs.concat(id);
     }
     this.setState({favorites: favs});
-    console.log(this.state.favorites);
+    const cookies = new Cookies();
+    cookies.set('myStars', favs);
   }
 
   render() {
     const { jobs, searchfield } = this.state;
     const withStars = this.state.jobs.map(j => {
-      if(!this.state.favorites.includes(j.id)){
+      if(this.state.favorites && this.state.favorites.indexOf(j.id)===-1){
         return j;
       }else {
         j.stared = true;
