@@ -7,12 +7,11 @@ const CardList = ({
 }) => {
   return ( 
     <div> {
-      jobs.map((user, i) => {
+      jobs.map((job, i) => {
         return ( 
-          <Card key = { jobs[i].id }
-                id = { jobs[i].id }
-                name = { jobs[i].name }
-                keywords = { jobs[i].keywords}
+          <Card key = { i }
+                id = { job.job_id }
+                name = { job.job_title }
                 stared = { jobs[i].stared}
                 onStarClick = {onStarClick}
           />
